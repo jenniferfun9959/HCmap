@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 
 <html>
@@ -16,13 +16,7 @@
     <title>HC map</title>
 
     <style>
-        /*
-        html, body, #map {
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        */
+
       html,
       body,
       #viewDiv {
@@ -32,16 +26,11 @@
         width: 100%;
       }
 
-      /*
-      #optionsDiv {
-        position: absolute;
-        bottom: 17px;
-        width: 100%;
-        padding: 20px 0;
-        z-index: 1;
-        text-align: center;
+      input{
+          width: 15px;
+          height: 15px;
       }
-        */
+
     </style>
 
 </head>
@@ -58,19 +47,27 @@
 
         <!--Location selection-->
         <form name="selection_loc">
-            <b> 1. Switch Location</b>
+            <b> 1. Switch Location：</b>
+            <abbr> (a)區域搜尋：</abbr>
             <select id="selection_loc_id">
                 <option value="Hsinchu">HSINCHU CITY</option>
                 <option value="East">East District</option>
                 <option value="North">North District</option>
                 <option value="Xiangshan">Xiangshan District</option>
             </select>
+            <!--
+            <abbr> / (b)TWD97座標搜尋： X</abbr>
+            <input type="text" id="input_x" size="10" maxlength="12" />
+            <abbr> Y</abbr>
+            <input type="text" id="input_y" size="10" maxlength="12" />
+            <button id="go_button" onclick="goloc">Go</button>
+                -->
         </form>
         <form>
-            <b> 2. Add Layer</b>
+            <b> 2. Add Layer：</b>
             <input type="checkbox" value="1" id="layer01"> 國道
             <input type="checkbox" value="2" id="layer02"> 太陽能設置狀況
-            <input type="checkbox" value="3" id="layer03"> 圖層03
+            <input type="checkbox" value="3" id="layer03"> 衛星影像
         </form>
     </div>
 
@@ -164,10 +161,22 @@
                       break;
               }
           })
-          
+
+
         });
 
-        
+        /*
+        function goloc() {
+              xloc = document.getElementById("input_x");
+              yloc = document.getElementById("input_y");
+              newx = xloc.value;
+              newy = yloc.value;
+              myview.goTo({
+                  center: [-120.9279, -24.7715],
+                  zoom: 14,
+              })
+          }
+          */
 
     </script>
 </body>
@@ -179,6 +188,7 @@
 【URL】
 行政區界：http://ntpc.weiinfo.com.tw/server/rest/services/Hosted/HCframe_WFL1/FeatureServer
 國道：https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/2
+全台衛星影像raster：https://www.arcgis.com/sharing/rest/content/items/caa6e45cc6c2417884c1de35277c961e/data
 
 【下次工作】
 143行加入圖層 & 關掉圖層
