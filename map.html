@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!--
+    <link rel="stylesheet" href="https://js.arcgis.com/3.29/esri/css/esri.css">
+    <script src="https://js.arcgis.com/3.29/"></script>
+    -->
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.12/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.12/"></script>
+
+    <title>HC map</title>
+
+    <style>
+        /*
+        html, body, #map {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        */
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 96.5%;
+        width: 100%;
+      }
+
+      /*
+      #optionsDiv {
+        position: absolute;
+        bottom: 17px;
+        width: 100%;
+        padding: 20px 0;
+        z-index: 1;
+        text-align: center;
+      }
+        */
+    </style>
+
+</head>
+
+<!------------------------------------HTML ELEMENT------------------------------------->
+
+<body class="claro">
+    <div id="mymap">
+        <!--Infomation Button
+        <button onclick="do_start()" id="mystart">Get Start</button>
+            -->
+        
+        <abbr id="aTitle"><strong>【HC MAP】</strong>Made by: Hsieh Cheng Fang | Last Edit: 2019/8/26</abbr>
+
+        <!--Location selection-->
+        <form name="selection_loc">
+            <b> 1. Switch Location</b>
+            <select id="selection_loc_id">
+                <option value="Hsinchu">HSINCHU CITY</option>
+                <option value="East">East District</option>
+                <option value="North">North District</option>
+                <option value="Xiangshan">Xiangshan District</option>
+            </select>
+        </form>
+        <form>
+            <b> 2. Add Layer</b>
+            <input type="checkbox" value="1" id="layer01"> 國道
+            <input type="checkbox" value="2" id="layer02"> 太陽能設置狀況
+            <input type="checkbox" value="3" id="layer03"> 圖層03
+        </form>
+    </div>
+
+    <!----Scene View---->
+    <div id="viewDiv"></div>
+
+<!------------------------------------SCRIPT------------------------------------------->
+    <script>
+        
+        require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer", "dojo/domReady!"], function (Map, SceneView, FeatureLayer) {
+
+            // SET MAP AND VIEW //
+
+            var mymap = new Map({
+                basemap: "osm"
+            });
+
+            var myview = new SceneView({
+                container: "viewDiv",
+                map: mymap,
+                center: [120.9279, 24.7715], //新竹市縮小
+                zoom: 12,
+            });
+
+
+          // ADD LAYER //
+          /*先定義layer從url加入*/
+            var highway = new FeatureLayer({
+                url:"https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/2"
+            });
+            
+
+          /*圖層選取*/
+          lay1 = document.getElementById("layer01")
+          lay1.addEventListener("change", function () {
+              on = lay1.checked
+              if (on === true) {
+                  mymap.add(highway);
+              }
+              else {
+                  mymap.remove(highway);
+              }
+          })
+
+          lay2 = document.getElementById("layer02")
+          lay2.addEventListener("change", function () {
+                alert("尚未建置");
+          })
+
+          lay3 = document.getElementById("layer03")
+          lay3.addEventListener("change", function () {
+              alert("尚未建置");
+          })
+
+          // SWITCH LOCATION //
+
+          sel = document.getElementById("selection_loc_id")
+          sel.addEventListener("change", function () {
+              option = sel.value
+              
+              switch (option) {
+                  case "Hsinchu":
+                      myview.goTo({
+                          center: [120.9279, 24.7715], 
+                          zoom: 12,
+                      })
+                      break;
+
+                  case "East":
+                      myview.goTo({
+                          center: [120.9933, 24.7930], 
+                          zoom: 14,
+                      })
+                      break;
+
+                  case "North":
+                      myview.goTo({
+                          center: [120.9511, 24.8199], 
+                          zoom: 14,
+                      })
+                      break;
+
+                  case "Xiangshan":
+                      myview.goTo({
+                          center: [120.9279, 24.7715], 
+                          zoom: 14,
+                      })
+                      break;
+
+                  default:
+                      break;
+              }
+          })
+          
+        });
+
+        
+
+    </script>
+</body>
+
+</html>
+
+<!--
+
+【URL】
+行政區界：http://ntpc.weiinfo.com.tw/server/rest/services/Hosted/HCframe_WFL1/FeatureServer
+國道：https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/2
+
+【下次工作】
+143行加入圖層 & 關掉圖層
+
+-->
