@@ -61,10 +61,12 @@
         </form>
         <form>
             <b> 2. Add Layer：</b>
+            <input type="checkbox" value="0" id="layer00"> 行政區界
             <input type="checkbox" value="1" id="layer01"> 國道
             <input type="checkbox" value="2" id="layer02"> 臺鐵
             <input type="checkbox" value="3" id="layer03"> 高鐵
-            <input type="checkbox" value="4" id="layer04"> 圖層04
+            <input type="checkbox" value="4" id="layer04"> 東部衛星影像
+            <input type="checkbox" value="5" id="layer05"> 圖層04
         </form>
     </div>
     <!----Scene View---->
@@ -72,9 +74,9 @@
     <!------------------------------------SCRIPT------------------------------------------->
     <script>
 
-        require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer", "dojo/domReady!"/*, "esri/layers/ArcGISDynamicMapServiceLayer", "esri/layers/ImageParameters"*/], function (Map, SceneView, FeatureLayer/*, ArcGISDynamicMapServiceLayer, ImageParameters*/) {
+        require(["esri/Map", "esri/views/SceneView", "esri/layers/FeatureLayer", "dojo/domReady!", "esri/layers/ImageryLayer", "esri/symbols/Symbol", "esri/Color"], function (Map, SceneView, FeatureLayer, ImageryLayer, Symbol, Color) {
             
-
+            
             // SET MAP AND VIEW //
 
             var mymap = new Map({
@@ -91,9 +93,14 @@
 
             // ADD LAYER //
             /*先定義layer從url加入*/
+            var hcframe = new FeatureLayer({
+                url: "http://ntpc.weiinfo.com.tw/server/rest/services/Hosted/HCframe2_WFL1/FeatureServer"
+            });
+
             var highway = new FeatureLayer({
                 url: "https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/2"
             });
+
             var railway = new FeatureLayer({
                 url: "https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/4"
             });
@@ -101,9 +108,25 @@
             var highspeed = new FeatureLayer({
                 url: "https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/3"
             });
+
+            //var layer = new ImageryLayer({
+            //    url: "https://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer"
+            //})
             
 
             /*圖層選取*/
+
+            lay0 = document.getElementById("layer00")
+            lay0.addEventListener("change", function () {
+                on0 = lay0.checked
+                if (on0 === true) {
+                    mymap.add(hcframe);
+                }
+                else {
+                    mymap.remove(hcframe);
+                }
+            })
+
             lay1 = document.getElementById("layer01")
             lay1.addEventListener("change", function () {
                 on1 = lay1.checked
@@ -139,8 +162,23 @@
 
             lay4 = document.getElementById("layer04")
             lay4.addEventListener("change", function () {
+                on4 = lay4.checked
                 alert("尚未建置");
             })
+
+            lay5 = document.getElementById("layer05")
+            lay5.addEventListener("change", function () {
+                alert("尚未建置");
+            })
+        
+            // POLYLINE SYMBOLOGY //
+            var symbol = {
+                type: "simple-line",  // autocasts as new SimpleLineSymbol()
+                color: "lightblue",
+                width: "2px",
+                style: "short-dot"
+            };
+
 
             // SWITCH LOCATION //
 
@@ -204,6 +242,7 @@
 <!--
 
 【URL】
+行政區界NEW：http://ntpc.weiinfo.com.tw/server/rest/services/Hosted/HCframe2_WFL1/FeatureServer
 行政區界：http://ntpc.weiinfo.com.tw/server/rest/services/Hosted/HCframe_WFL1/FeatureServer
 國道：https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/2
 台鐵：https://services5.arcgis.com/TE02ZT3eFP24b06d/arcgis/rest/services/Scene1_WFL1/FeatureServer/4
@@ -212,5 +251,7 @@
 
 【下次工作】
 加入raster圖層
+改變symbology
+抓現在天氣資料
 
 -->
